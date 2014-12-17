@@ -28,11 +28,8 @@ function init() {
 
     cameraControl = new THREE.OrbitControls(camera);
 
-    /*
-    chessCaseColor = 'red';
-    var chessCase = new ChessCase(0 ,0 , chessCaseColor);
-    chessCase.addPiece();
-    this.scene.add(chessCase.chessCaseMesh);*/
+    
+    
 
     // ajout de la lumière
     addLight();
@@ -44,6 +41,9 @@ function init() {
 
     makeChessBoard();
 
+
+
+
     document.body.appendChild(renderer.domElement);
     render();
     camera.lookAt(scene.position);
@@ -53,7 +53,7 @@ function init() {
 // Called when the scene needs to be rendered. Delegates to requestAnimationFrame
 // for future renders
 function render() {
-	cameraControl.update();
+    cameraControl.update();
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
@@ -86,24 +86,18 @@ function addLight(){
 }
 
 function makeChessBoard() {
-    var color;
-    for (var i = 0; i < 8; i++) {
+    for(var i=0; i < 8; i++){
         for (var j = 0; j < 8; j++) {
+            var chessCaseColor = 'white';
 
-            if (i == 0 && j == 0) {
-                color = 'black';
+            if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
+                chessCaseColor = 'black';
             }
-            else
-            {
-                color = 'white';
-            }
-
-            
-            
-        }   
+            var chessCase = new ChessCase(j ,i , chessCaseColor);
+            chessCase.addPiece();
+            this.scene.add(chessCase.chessCaseMesh);    
+        }
     }
-    var chessCase = new ChessCase(0,0,'black');
-    scene.add(chessCase);
 }
 
 
