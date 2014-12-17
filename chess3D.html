@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chess 3D</title>
+        <!--Librairies-->
+        <script src="libs/three.js"></script>
+        <script src="libs/stats.min.js"></script>
+	    <script src="libs/dat.gui.min.js"></script>
+	    <script src="libs/OrbitControls.js"></script>
+	    <script src="libs/EffectComposer.js"></script>
+	    <script src="libs/RenderPass.js"></script>
+	    <script src="libs/CopyShader.js"></script>
+	    <script src="libs/ShaderPass.js"></script>
+	    <script src="libs/MaskPass.js"></script>
+        <script src="libs/physijs/physi.js"></script>
+        <script type="text/javascript">
+            Physijs.scripts.worker = 'libs/physijs/physijs_worker.js';
+            Physijs.scripts.ammo = 'ammo.js';
+        </script>
+        <!--Main and Objects-->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/Objects/ChessCase.js"></script>
+        <script src="scripts/Objects/ChessBoard.js"></script>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+    </body>
+</html>

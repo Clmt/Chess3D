@@ -1,0 +1,108 @@
+// BORDEL
+// ajout de la table
+    /*
+    var tableTextture = THREE.ImageUtils.loadTexture("Pictures/wood-texture.jpg");
+    var tableGeometry = new THREE.BoxGeometry(200, 0, 200);
+    var tableMaterial = new THREE.MeshLambertMaterial({ map: tableTextture });
+    var table = new THREE.Mesh(tableGeometry, tableMaterial);
+    table.position.x = 0;
+    table.position.y = 0;
+    table.position.z = 0;
+    table.castShadow = false;
+    table.name = 'table';
+    scene.add(table);*/
+
+/*
+    var tableMaterial = Physijs.createMaterial(
+        new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture("Pictures/floor-wood.png")}),
+        .9,
+        .6
+    );
+
+    var table = new Physijs.BoxMesh(
+        new THREE.BoxGeometry(200,200,1),
+        tableMaterial,
+        0
+    );
+
+    table.receiveShadow = true;
+    table.rotation.x = -0.5 * Math.PI;
+    table.position.x = 0;
+    table.position.y = -2;
+    table.position.z = 0;
+
+    scene.add(table);*/
+
+    /*
+    var tourMesh;
+    var tourMaterial;
+    var tour = new THREE.JSONLoader();
+    tour.load("scripts/tour.js", function (geometry) {
+        tourMaterial = new THREE.MeshLambertMaterial({ color: 'gray', ambient: 'gray' });
+        tourMesh = new THREE.Mesh(geometry, tourMaterial);
+        tourMesh.position.x = 0;
+        tourMesh.position.y = -6;
+        tourMesh.position.z = 0;
+        //table.add(tourMesh);
+    });
+    
+    console.log(tourMesh.position.x);
+    console.log(tourMesh.position.y);
+    console.log(tourMesh.position.z);
+
+function LoadPieces() {
+    // Add pieces
+    // White points
+    var pionLoader = new THREE.JSONLoader();
+    pionLoader.load("scripts/pion.js", function (geometry) {
+        for (var i = 0; i > -8; i--) {
+            var material = new THREE.MeshLambertMaterial({ color: 'black', ambient: 'gray' });
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.position.x = 60;
+            mesh.position.y = -1;
+            mesh.position.z = 55 - (10 * i);
+            scene.add(mesh);
+            console.log(mesh.position);
+        }
+    });
+
+    
+
+    var cavalierLoader = new THREE.JSONLoader();
+    cavalierLoader.load("scripts/cavalier.js", function (geometry) {
+        var material = new THREE.MeshLambertMaterial({ color: 'black', ambient: 'gray' });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    });
+
+    var fouLoader = new THREE.JSONLoader();
+    fouLoader.load("scripts/fou.js", function (geometry) {
+        var material = new THREE.MeshLambertMaterial({ color: 'black', ambient: 'gray' });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    });
+
+    var reineLoader = new THREE.JSONLoader();
+    reineLoader.load("scripts/reine.js", function (geometry) {
+        var material = new THREE.MeshLambertMaterial({ color: 'black', ambient: 'gray' });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    });
+
+    var roiLoader = new THREE.JSONLoader();
+    roiLoader.load("scripts/roi.js", function (geometry) {
+        var material = new THREE.MeshLambertMaterial({ color: 'black', ambient: 'gray' });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    });
+}
+
+function loadTower() {
+    var tourLoader = new THREE.JSONLoader();
+    tourLoader.load("scripts/tour.js", function (geometry) {
+        var material = new THREE.MeshLambertMaterial({ color: 'gray', ambient: 'white' });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+    });
+}
+    */
