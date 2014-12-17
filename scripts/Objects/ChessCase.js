@@ -47,11 +47,16 @@ ChessCase.prototype.addPiece = function() {
         piece = new THREE.Mesh(geometry, material);
         piece.position.y = -3.75;
 
+        piece.position.x = 0;
+        piece.position.z = 0;
+
         if (ord == 0) {
             for(var j = 0; j < 8; j++) {
                 
             }
         }
+
+        caseMesh.add(piece);
         
     }
 }

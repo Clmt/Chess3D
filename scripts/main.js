@@ -40,10 +40,7 @@ function init() {
 
 
     makeChessBoard();
-
-
-
-
+    
     document.body.appendChild(renderer.domElement);
     render();
     camera.lookAt(scene.position);
@@ -94,7 +91,7 @@ function makeChessBoard() {
                 chessCaseColor = 'black';
             }
             var chessCase = new ChessCase(j ,i , chessCaseColor);
-            chessCase.addPiece();
+            //chessCase.addPiece();
             this.scene.add(chessCase.chessCaseMesh);    
         }
     }
