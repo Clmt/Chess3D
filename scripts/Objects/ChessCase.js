@@ -1,14 +1,14 @@
 function ChessCase (p_ordonnee, p_abscisse, p_color)  {
-	this.chessCaseMaterial = Physijs.createMaterial(
-    	new THREE.MeshPhongMaterial({color:p_color, ambient:p_color}),
-    	.9,
-    	.6
+    this.chessCaseMaterial = Physijs.createMaterial(
+        new THREE.MeshPhongMaterial({color:p_color, ambient:p_color}),
+        .9,
+        .6
     );
 
     this.chessCaseMesh = new Physijs.BoxMesh(
-    	new THREE.BoxGeometry(10,2,10),
-    	this.chessCaseMaterial,
-    	2
+        new THREE.BoxGeometry(10,2,10),
+        this.chessCaseMaterial,
+        2
     );
 
     this.ordonnee = p_ordonnee;
@@ -38,17 +38,21 @@ ChessCase.prototype.addPiece = function() {
     loader.load("scripts/fou.js", callback);
 
     function callback(geometry){
+        var ord = self.getOrdonnee();
+        var absc = self.getAbscisse();
+
+
         var caseMesh = self.getMesh();
         var material = new THREE.MeshPhongMaterial({ color: 'blue', ambient: 'blue' });
         piece = new THREE.Mesh(geometry, material);
         piece.position.y = -3.75;
-        /*
-        if (self.getOrdonnee == 0) && (self.getAbscisse == 0) {
-            piece.position.x = 
-            piece.
-        }
 
-                caseMesh.add(piece);*/
+        if (ord == 0) {
+            for(var j = 0; j < 8; j++) {
+                
+            }
+        }
+        
     }
 }
 
