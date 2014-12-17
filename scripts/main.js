@@ -11,8 +11,6 @@ var cameraControl;
 // ORIGIN
 // -----------------
 function init() {
-    var tourBlancheGauche;
-
     scene = new Physijs.Scene;
     scene.setGravity(new THREE.Vector3(0, -50, 0));
 
@@ -31,7 +29,7 @@ function init() {
     
     
 
-    // ajout de la lumière
+    // add a light
     addLight();
 
    // add objects
@@ -40,7 +38,7 @@ function init() {
 
 
     makeChessBoard();
-    
+
     document.body.appendChild(renderer.domElement);
     render();
     camera.lookAt(scene.position);

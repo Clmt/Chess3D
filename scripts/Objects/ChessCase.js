@@ -57,7 +57,6 @@ ChessCase.prototype.addPiece = function() {
         }
 
         caseMesh.add(piece);
-        
     }
 }
 
