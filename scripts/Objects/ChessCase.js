@@ -33,7 +33,7 @@ ChessCase.prototype = {
     getIdentifiant : function () {return this.identifiant;}
 }
 
-ChessCase.prototype.addPiece = function() {
+ChessCase.prototype.addPiece = function(piece_color) {
     var loader = new THREE.JSONLoader();
     var piece;
     var self = this;
@@ -43,18 +43,17 @@ ChessCase.prototype.addPiece = function() {
         var ord = self.getOrdonnee();
         var absc = self.getAbscisse();
         var id = self.getIdentifiant();
-
+        var caseColor='white';
         var caseMesh = self.getMesh();
 
 
-        //if(id == 1 || id == 2) {
-            var material = new THREE.MeshPhongMaterial({ color: 'blue', ambient: 'blue' });
+        var material = new THREE.MeshPhongMaterial({ color: piece_color, ambient: piece_color });
         
-            piece = new THREE.Mesh(geometry, material);
-            piece.position.x = 0.5;
-            piece.position.y = 0;
-            piece.position.z = -1;
-        //}
+        piece = new THREE.Mesh(geometry, material);
+        piece.position.x = 0.5;
+        piece.position.y = 0;
+        piece.position.z = -1;
+        
         caseMesh.add(piece);
     }
 }

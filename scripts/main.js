@@ -82,17 +82,22 @@ function addLight(){
 
 function makeChessBoard() {
     var compteur = 1;
+    
     for(var i=0; i < 10; i++){
         for (var j = 0; j < 10; j++) {
             var chessCaseColor = '#E8D0AA'; // marron clair
-
+            var pieceColor = 'white';
             if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
                 console.log(compteur);
                 chessCaseColor = '#827467'; // marron foncé
+                if (j > 5) {
+                    pieceColor = 'black';
+                }
+
                 var chessCase = new ChessCase(j ,i , chessCaseColor, compteur);
 
                 if (j != 4 && j != 5)  {
-                    chessCase.addPiece();
+                    chessCase.addPiece(pieceColor);
                 }
 
                 compteur++;
@@ -103,7 +108,7 @@ function makeChessBoard() {
 
             
             this.scene.add(chessCase.chessCaseMesh);
-           
+
         }
     }
 }
