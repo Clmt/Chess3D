@@ -1,15 +1,7 @@
 function ChessCase (p_ordonnee, p_abscisse, p_color, id)  {
-    this.chessCaseMaterial = Physijs.createMaterial(
-        new THREE.MeshPhongMaterial({color:p_color, ambient:p_color}),
-        .9,
-        .6
-    );
-
-    this.chessCaseMesh = new Physijs.BoxMesh(
-        new THREE.BoxGeometry(10,2,10),
-        this.chessCaseMaterial,
-        2
-    );
+    this.chessCaseGeo = new THREE.BoxGeometry(10,2,10);
+    this.chessCaseMaterial = new THREE.MeshPhongMaterial({color:p_color, ambient:p_color});
+    this.chessCaseMesh = new THREE.Mesh(this.chessCaseGeo, this.chessCaseMaterial);
 
     this.identifiant = id;
     this.ordonnee = p_ordonnee;
@@ -22,6 +14,8 @@ function ChessCase (p_ordonnee, p_abscisse, p_color, id)  {
     this.name = "";
     
     this.castShadow = true;
+
+    this.hasPiece = false;
 }
 
 
@@ -30,7 +24,9 @@ ChessCase.prototype = {
     setMesh : function (value) {return this.chessCaseMesh;},
     getOrdonnee : function() {return this.ordonnee;},
     getAbscisse : function () {return this.abscisse;},
-    getIdentifiant : function () {return this.identifiant;}
+    getIdentifiant : function () {return this.identifiant;},
+    getHasPiece : function () {return this.hasPiece;},
+    setHasPiece : function (value) {return this.hasPiece;}
 }
 
 ChessCase.prototype.addPiece = function(piece_color) {
@@ -55,11 +51,7 @@ ChessCase.prototype.addPiece = function(piece_color) {
         piece.position.z = -1;
         
         caseMesh.add(piece);
+        self.setHasPiece = true;
     }
 }
 
-/*
-piece.position.x = (self.getMesh().position.x - 4) / self.getOrdonnee();
-            piece.position.y = -3.75;
-            piece.position.z = (self.getMesh().position.z - 2) / self.getAbscisse();
-            self.getMesh().add(piece);*/

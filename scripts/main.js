@@ -11,12 +11,11 @@ var cameraControl;
 // ORIGIN
 // -----------------
 function init() {
-    scene = new Physijs.Scene;
-    scene.setGravity(new THREE.Vector3(0, -50, 0));
-
+    scene = new THREE.Scene;
+   
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.x = 200;
-    camera.position.y = 100;
+    camera.position.x = 50;
+    camera.position.y = 200;
     camera.position.z = 0;
     
     renderer = new THREE.WebGLRenderer();
@@ -26,22 +25,16 @@ function init() {
 
     cameraControl = new THREE.OrbitControls(camera);
 
-    
-    
-
-    // add a light
+    // Lumière
     addLight();
 
-   // add objects
-    /*var chessBoard = new ChessBoard(scene);
-    chessBoard.make();*/
-
-
+    // Plateau de jeu
     makeChessBoard();
 
     document.body.appendChild(renderer.domElement);
-    render();
+    
     camera.lookAt(scene.position);
+    render();
 }
 
 
@@ -82,14 +75,19 @@ function addLight(){
 
 function makeChessBoard() {
     var compteur = 1;
-    
+    var middleCase;
     for(var i=0; i < 10; i++){
         for (var j = 0; j < 10; j++) {
+
             var chessCaseColor = '#E8D0AA'; // marron clair
             var pieceColor = 'white';
+
             if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
-                console.log(compteur);
+
+                //console.log(compteur);
+
                 chessCaseColor = '#827467'; // marron foncé
+
                 if (j > 5) {
                     pieceColor = 'black';
                 }
@@ -100,6 +98,9 @@ function makeChessBoard() {
                     chessCase.addPiece(pieceColor);
                 }
 
+                if (compteur == 28) {
+                    middleCase = chessCase;
+                }
                 compteur++;
             }
             else {
@@ -111,6 +112,9 @@ function makeChessBoard() {
 
         }
     }
+    console.log(middleCase.getMesh().position.x);
+    console.log(middleCase.getMesh().position.y);
+    console.log(middleCase.getMesh().position.z);
 }
 
 
