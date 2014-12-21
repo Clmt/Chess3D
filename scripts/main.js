@@ -90,7 +90,7 @@ function makeChessBoard() {
                 chessCaseColor = 'black';
             }
             var chessCase = new ChessCase(j ,i , chessCaseColor, compteur);
-            //chessCase.addPiece();
+            chessCase.addPiece();
             this.scene.add(chessCase.chessCaseMesh);
             compteur++;
         }

@@ -36,7 +36,7 @@ ChessCase.prototype.addPiece = function() {
     var loader = new THREE.JSONLoader();
     var piece;
     var self = this;
-    loader.load("scripts/fou.js", callback);
+    loader.load("scripts/checker.js", callback);
 
     function callback(geometry){
         var ord = self.getOrdonnee();
