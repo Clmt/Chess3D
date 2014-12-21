@@ -1,4 +1,4 @@
-function ChessCase (p_ordonnee, p_abscisse, p_color)  {
+function ChessCase (p_ordonnee, p_abscisse, p_color, id)  {
     this.chessCaseMaterial = Physijs.createMaterial(
         new THREE.MeshPhongMaterial({color:p_color, ambient:p_color}),
         .9,
@@ -11,6 +11,7 @@ function ChessCase (p_ordonnee, p_abscisse, p_color)  {
         2
     );
 
+    this.identifiant = id;
     this.ordonnee = p_ordonnee;
     this.abscisse = p_abscisse;
 
