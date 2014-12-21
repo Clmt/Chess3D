@@ -82,12 +82,12 @@ function addLight(){
 
 function makeChessBoard() {
     var compteur = 0;
-    for(var i=0; i < 8; i++){
-        for (var j = 0; j < 8; j++) {
-            var chessCaseColor = 'white';
+    for(var i=0; i < 10; i++){
+        for (var j = 0; j < 10; j++) {
+            var chessCaseColor = '#E8D0AA';
 
             if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
-                chessCaseColor = 'black';
+                chessCaseColor = '#827467';
             }
             var chessCase = new ChessCase(j ,i , chessCaseColor, compteur);
             chessCase.addPiece();

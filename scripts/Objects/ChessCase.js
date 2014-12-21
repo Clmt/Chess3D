@@ -29,7 +29,8 @@ ChessCase.prototype = {
     getMesh : function () {return this.chessCaseMesh;},
     setMesh : function (value) {return this.chessCaseMesh;},
     getOrdonnee : function() {return this.ordonnee;},
-    getAbscisse : function () {return this.abscisse;}
+    getAbscisse : function () {return this.abscisse;},
+    getIdentifiant : function () {return this.identifiant;}
 }
 
 ChessCase.prototype.addPiece = function() {
@@ -41,22 +42,20 @@ ChessCase.prototype.addPiece = function() {
     function callback(geometry){
         var ord = self.getOrdonnee();
         var absc = self.getAbscisse();
-
+        var id = self.getIdentifiant();
 
         var caseMesh = self.getMesh();
-        var material = new THREE.MeshPhongMaterial({ color: 'blue', ambient: 'blue' });
-        piece = new THREE.Mesh(geometry, material);
-        piece.position.y = -3.75;
 
-        piece.position.x = 0;
-        piece.position.z = 0;
 
-        if (ord == 0) {
-            for(var j = 0; j < 8; j++) {
-                
-            }
+        if(id == 1) {
+            var material = new THREE.MeshPhongMaterial({ color: 'blue', ambient: 'blue' });
+        
+            piece = new THREE.Mesh(geometry, material);
+            piece.position.y = -3.75;
+
+            piece.position.x = 0;
+            piece.position.z = 0;
         }
-
         caseMesh.add(piece);
     }
 }
