@@ -81,18 +81,29 @@ function addLight(){
 }
 
 function makeChessBoard() {
-    var compteur = 0;
+    var compteur = 1;
     for(var i=0; i < 10; i++){
         for (var j = 0; j < 10; j++) {
-            var chessCaseColor = '#E8D0AA';
+            var chessCaseColor = '#E8D0AA'; // marron clair
 
             if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
-                chessCaseColor = '#827467';
+                console.log(compteur);
+                chessCaseColor = '#827467'; // marron foncé
+                var chessCase = new ChessCase(j ,i , chessCaseColor, compteur);
+
+                if (j != 4 && j != 5)  {
+                    chessCase.addPiece();
+                }
+
+                compteur++;
             }
-            var chessCase = new ChessCase(j ,i , chessCaseColor, compteur);
-            chessCase.addPiece();
+            else {
+                var chessCase = new ChessCase(j ,i , chessCaseColor, 999);
+            }
+
+            
             this.scene.add(chessCase.chessCaseMesh);
-            compteur++;
+           
         }
     }
 }

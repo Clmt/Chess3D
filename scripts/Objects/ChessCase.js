@@ -47,15 +47,14 @@ ChessCase.prototype.addPiece = function() {
         var caseMesh = self.getMesh();
 
 
-        if(id == 1) {
+        //if(id == 1 || id == 2) {
             var material = new THREE.MeshPhongMaterial({ color: 'blue', ambient: 'blue' });
         
             piece = new THREE.Mesh(geometry, material);
-            piece.position.y = -3.75;
-
-            piece.position.x = 0;
-            piece.position.z = 0;
-        }
+            piece.position.x = 0.5;
+            piece.position.y = 0;
+            piece.position.z = -1;
+        //}
         caseMesh.add(piece);
     }
 }
