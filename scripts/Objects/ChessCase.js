@@ -1,6 +1,6 @@
-function ChessCase (p_ordonnee, p_abscisse, p_color, id)  {
+function ChessCase (p_ordonnee, p_abscisse, p_color, id, p_opacity)  {
     this.chessCaseGeo = new THREE.BoxGeometry(10,2,10);
-    this.chessCaseMaterial = new THREE.MeshPhongMaterial({color:p_color, ambient:p_color});
+    this.chessCaseMaterial = new THREE.MeshPhongMaterial({color:p_color, ambient:p_color, transparent:true, opacity:p_opacity});
     this.chessCaseMesh = new THREE.Mesh(this.chessCaseGeo, this.chessCaseMaterial);
 
     this.identifiant = id;
@@ -16,6 +16,7 @@ function ChessCase (p_ordonnee, p_abscisse, p_color, id)  {
     this.castShadow = true;
 
     this.hasPiece = false;
+    this.piece = null;
 }
 
 
@@ -26,7 +27,9 @@ ChessCase.prototype = {
     getAbscisse : function () {return this.abscisse;},
     getIdentifiant : function () {return this.identifiant;},
     getHasPiece : function () {return this.hasPiece;},
-    setHasPiece : function (value) {return this.hasPiece;}
+    setHasPiece : function (value) {return this.hasPiece;},
+    getPiece : function () {return this.piece;},
+    setPiece : function (value) {return this.piece;}
 }
 
 ChessCase.prototype.addPiece = function(piece_color) {
@@ -39,19 +42,25 @@ ChessCase.prototype.addPiece = function(piece_color) {
         var ord = self.getOrdonnee();
         var absc = self.getAbscisse();
         var id = self.getIdentifiant();
-        var caseColor='white';
+        
         var caseMesh = self.getMesh();
 
 
-        var material = new THREE.MeshPhongMaterial({ color: piece_color, ambient: piece_color });
+        var material = new THREE.MeshPhongMaterial({ color: piece_color, ambient: piece_color});
         
         piece = new THREE.Mesh(geometry, material);
         piece.position.x = 0.5;
         piece.position.y = 0;
         piece.position.z = -1;
-        
+        piece.castShadow = true;
         caseMesh.add(piece);
-        self.setHasPiece = true;
+        collidablePieceList.push(piece);
+
+        self.hasPiece = true;
+        self.piece = piece;
+
+        //console.log("self.piece = " + self.piece);
+
     }
 }
 
