@@ -12,6 +12,15 @@ var collidableCaseList = [];
 var oldColors = [1];
 var caseCliquee;
 var pieceCliquee;
+var colorfirstcase;
+var cptmove = 0;
+var pieceMangee;
+var casePieceMangee;
+var caseDepartPieceMangee;
+var casePostManger;
+var lastMoveColor = 0;
+var depart = [];
+var arrivee = [];
 
 // -----------------
 // ORIGIN
@@ -20,17 +29,18 @@ function init() {
     scene = new THREE.Scene;
    
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.x = 200;
-    camera.position.y = 131;
-    camera.position.z = 0;
-    
+    camera.position.set(200, 131, 0);
+
+
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0xdddddd, 1.0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
 
-   // cameraControl = new THREE.OrbitControls(camera);
+    // cameraControl = new THREE.OrbitControls(camera);
 
+    document.body.appendChild(renderer.domElement);
+    
     // Lumière
     addLight();
 
@@ -147,86 +157,154 @@ function makeChessBoard() {
 
 var projector = new THREE.Projector();
 function onDocumentMouseDown(event) {
-        console.log("onmousedown");
-        //event.preventDefault();
-        var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-        projector.unprojectVector(vector, camera);
+    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector, camera);
 
-        var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-        var intersects = raycaster.intersectObjects(collidablePieceList);
-        var intersectsCases = raycaster.intersectObjects(collidableCaseList);
-        
-        if (intersectsCases) {
-            caseCliquee = intersectsCases[0].object;
-            console.log("case cliquee : " + caseCliquee);
-
-        }
-
-        if (intersects.length > 0) {
-
-          
-
-            selectedObject = intersects[0].object;
-            pieceCliquee = selectedObject;
-          
-            
-        }
+    var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    var intersects = raycaster.intersectObjects(collidablePieceList);
+    var intersectsCases = raycaster.intersectObjects(collidableCaseList);
+    
+    if (intersectsCases) {
+        caseCliquee = intersectsCases[0].object;
     }
 
+    if (intersects.length > 0) {
+        selectedObject = intersects[0].object;
+        pieceCliquee = selectedObject;
+        colorfirstcase = selectedObject.material.color.r;
+        if(lastMoveColor == colorfirstcase) {
+            //alert('It\'s not your turn');
+            // document.getElementById("communication").innerHTML = "Paragraph changed!";
+            return;
+        }
 
-    function onDocumentMouseUp(event) {
-        console.log("onmouseup");
-        //event.preventDefault();
-        var vector2 = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-        projector.unprojectVector(vector2, camera);
+    }
+    
+    if(cptmove == 0) {
+        caseDepartPieceMangee = intersectsCases[0].object;
+        console.log('premier mouvement');
+    }
+    if(cptmove == 1) {
+        casePostManger = intersectsCases[0].object;
+        console.log('on va manger une piece');
+    }
 
-        var raycaster2 = new THREE.Raycaster(camera.position, vector2.sub(camera.position).normalize());
-        var intersects2 = raycaster2.intersectObjects(collidablePieceList);
-        
+    selectedObject = intersectsCases[0].object;
+    console.log('Case cliquee : ');
+    console.log(selectedObject.material.opacity);
+
+}
 
 
-        
+function onDocumentMouseUp(event) {
+     if(lastMoveColor == colorfirstcase) {
+        return;
+    }
+    var vector2 = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector2, camera);
 
-        var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-        projector.unprojectVector(vector, camera);
+    var raycaster2 = new THREE.Raycaster(camera.position, vector2.sub(camera.position).normalize());
+    var intersects2 = raycaster2.intersectObjects(collidablePieceList);
+    
+    var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+    projector.unprojectVector(vector, camera);
 
-        var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-        var intersects = raycaster.intersectObjects(collidableCaseList);
-        
+    var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    var intersects = raycaster.intersectObjects(collidableCaseList);
 
-        /*console.log(collidableCaseList);
-        console.log(intersects);*/
+    if (intersects.length > 0) {
+        selectedObject = intersects[0].object;
 
-        if (intersects.length > 0) {
+        var test1 = selectedObject.material.opacity; // on check si la case est libre
+        var value1 = 1;
+        var test2 = selectedObject.material.color.b; // on check si la case peut recevoir une pièce (couleur de la case)
+        var value2 = 0.403921568627451;
+        var test3 = caseCliquee.position.x - selectedObject.position.x; // on check que l'on se déplace pas sur la largeur
+        var value3 = 0;
+        var test4 = caseCliquee.position.z- selectedObject.position.z;  // on check que l'on se déplace pas sur la longueur
+        var value4 = 0;
+        var test5 = Math.abs(caseCliquee.position.x - selectedObject.position.x); // on check que l'on se déplace bien d'une case (part1)
+        var value5 = 10;
+        var test6 = Math.abs(caseCliquee.position.z - selectedObject.position.z); // on check que l'on se déplace bien d'une case (part2)
+        var value6 = 10;
+        var test7 = intersects2.length; // on check s'il y a une pièce dans la nouvelle case
+        var value7 = 0;
+        if(intersects2.length) {
+            var test8 = intersects2[0].object.material.color.r; // on check si la pièce de la nouvelle case a une couleur différente de celle du début
+        }
+        else {
+            var test8 = 10;
+        }
+        var value8 = colorfirstcase;
+        var test9 = cptmove; //on a déja lâché notre pièce sur une autre pour la manger (cpt + 1), là on va vérifier si une case est libre à côté
+        var value9 = 1;
+        if(casePostManger) {
+            var test10 = Math.abs(Math.abs(casePostManger.position.x) - Math.abs(casePieceMangee.position.x));
+            var value10 = 10;
+            var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
+            var value11 = 10;
+        }
+       /* if(casePostManger.length > 0) {
+           
+        }*/
 
-            selectedObject = intersects[0].object;
-            if (selectedObject.material.opacity == 0.99)  {
-                alert("La case est déjà prise !");
-            }
-            else if ((selectedObject.material.opacity == 1) && (selectedObject.material.color.b == 0.403921568627451 )) {
-                console.log("On dépose une pièce");
-                console.log(selectedObject.material.color);
+        if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
+            console.log('Deplacement simple');
+            selectedObject.add(pieceCliquee);
+            selectedObject.material.opacity = 0.99;
+            caseCliquee.material.opacity = 1;
+            lastMoveColor = pieceCliquee.material.color.r;
+
+            /* new */
+
+            depart['x'] = caseCliquee.position.x;
+            depart['z'] = caseCliquee.position.z;
+            arrivee['x'] = selectedObject.position.x;
+            arrivee['z'] = selectedObject.position.z;
+            console.log('depart x : ' + depart['x'] + 'depart z : ' + depart['z'] + 'arrivee x : ' + arrivee['x'] + 'arrivee z : ' + arrivee['z']);
+            caseCliquee.addPiece('black');
+
+            /* End new */
+
+            resetCase();
+        }
+        else if((test1 == value1) && (test2 == value2) && (test10 == value10) && (test11 == value11) && (test9 == value9)) {
+            console.log('On a mange une piece.');
+            if(casePostManger == selectedObject) {
+
+                casePieceMangee.remove(pieceMangee);
                 selectedObject.add(pieceCliquee);
                 selectedObject.material.opacity = 0.99;
-                caseCliquee.material.opacity = 1;
+                casePieceMangee.material.opacity = 1;
+                caseDepartPieceMangee.material.opacity = 1
+                resetCase();
+            }                
+        }
+        else if ((test1 == value1) && (test2 == value2) && (test10 != value10) && (test11 != value11) && (test9 == value9)) {
+            resetCase();
+        }
+        else if ((test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6) && (test7 > value7) && (test8 != value8)){
 
-
-
-
-                
-
-            }
-            
-
-            
+            console.log('la case est prenable !');
+            pieceMangee = intersects2[0].object;
+            casePieceMangee = intersects[0].object;
+            cptmove = 1;
+        }
+        else {
+            resetCase();
         }
 
-        
     }
+}
 
-
-
-
-
-
-
+function resetCase(){
+    caseCliquee = null;
+    pieceCliquee = null;
+    colorfirstcase = null;
+    pieceMangee = null;
+    casePieceMangee = null;
+    caseDepartPieceMangee = null;
+    casePostManger = null;
+    cptmove = 0;
+    console.log("reset");
+}
