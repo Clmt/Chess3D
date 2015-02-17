@@ -149,160 +149,180 @@ function onDocumentMouseDown(event) {
         caseCliquee = intersectsCases[0].object;
     }
 
+    /***********************************/
+    /*   Cas mauvaise couleur joue     */
+    /***********************************/
+
     if (intersects.length > 0) {
         selectedObject = intersects[0].object;
         pieceCliquee = selectedObject;
         colorFirstPiece = selectedObject.material.color.r;
         if(lastMoveColor == colorFirstPiece) {
-            old = document.getElementById("communication").innerHTML;
-            document.getElementById("communication").innerHTML = old + "<br/>" + "Ce n'est pas &agrave; votre tour de jouer !";
+            showMessageInBox("<br/>Ce n'est pas &agrave; votre tour de jouer !");
             return;
         }
     }
+
+    /***********************************/
+    /*  Fin cas mauvaise couleur joue  */
+    /***********************************/
     
+    // Premier mouvement
     if(cptmove == 0) {
         caseDepartPieceMangee = intersectsCases[0].object;
-        console.log('premier mouvement');
     }
+
+    // Part2 pièce à manger
+
     if(cptmove == 1) {
         casePostManger = intersectsCases[0].object;
-        console.log('on va manger une piece');
     }
 
     selectedObject = intersectsCases[0].object;
-    console.log('Case cliquee : ');
-    console.log(selectedObject.material.opacity);
 }
 
+
 function onDocumentMouseUp(event) {
-     if(lastMoveColor == colorFirstPiece) {
+    if(lastMoveColor == colorFirstPiece) {
         return;
     }
-    var vector2 = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-    projector.unprojectVector(vector2, camera);
-
-    var raycaster2 = new THREE.Raycaster(camera.position, vector2.sub(camera.position).normalize());
-    var intersects2 = raycaster2.intersectObjects(collidablePieceList);
-    
     var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
     projector.unprojectVector(vector, camera);
-    var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
+    var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
     var intersects = raycaster.intersectObjects(collidableCaseList);
+    var intersectsPiece = raycaster.intersectObjects(collidablePieceList);
 
     if (intersects.length > 0) {
         selectedObject = intersects[0].object;
 
-        var test1 = selectedObject.material.opacity; // on check si la case est libre
-        var value1 = 1;
-        var test2 = selectedObject.material.color.b; // on check si la case peut recevoir une pièce (couleur de la case)
-        var value2 = 0.403921568627451;
-        var test3 = caseCliquee.position.x - selectedObject.position.x; // on check que l'on se déplace pas sur la largeur
-        var value3 = 0;
-        var test4 = caseCliquee.position.z- selectedObject.position.z;  // on check que l'on se déplace pas sur la longueur
-        var value4 = 0;
-        var test5 = Math.abs(caseCliquee.position.x - selectedObject.position.x); // on check que l'on se déplace bien d'une case (part1)
-        var value5 = 10;
-        var test6 = Math.abs(caseCliquee.position.z - selectedObject.position.z); // on check que l'on se déplace bien d'une case (part2)
-        var value6 = 10;
-        var test7 = intersects2.length; // on check s'il y a une pièce dans la nouvelle case
-        var value7 = 0;
-        if(intersects2.length) {
-            var test8 = intersects2[0].object.material.color.r; // on check si la pièce de la nouvelle case a une couleur différente de celle du début
-        }
-        else {
-            var test8 = 10;
-        }
-        var value8 = colorFirstPiece;
-        var test9 = cptmove; //on a déja lâché notre pièce sur une autre pour la manger (cpt + 1), là on va vérifier si une case est libre à côté
-        var value9 = 1;
-        if(casePostManger) {
-            var test10 = Math.abs(Math.abs(casePostManger.position.x) - Math.abs(casePieceMangee.position.x));
-            var value10 = 10;
-            var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
-            var value11 = 10;
-        }
-        var test12 = Math.abs(selectedObject.position.x) - Math.abs(caseCliquee.position.x); // on vérife le sens de déplacement voulu de la pièce (haut ou bas)
-        var value12 = 0;
-        var test13 = colorFirstPiece;
-        var value13 = 1;
+        /***********************************/
+        /*    Création de tous les test    */
+        /***********************************/
 
-        if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
-            console.log('test 12 : ' + test12);
-            console.log('couleur first case : ' + colorFirstPiece);
-            if(((test12 > value12) && (test13 == value13)) || ((test12 < value12) && (test13 == value12))) {
-
-                console.log('Deplacement simple');
-                console.log(selectedObject.position.x);
-                console.log(caseCliquee.position.x);
-                selectedObject.add(pieceCliquee);
-                selectedObject.material.opacity = 0.99;
-                caseCliquee.material.opacity = 1;
-                lastMoveColor = pieceCliquee.material.color.r;
-                if(lastMoveColor == 0) {
-                    old = document.getElementById("communication").innerHTML;
-                    document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
-                }
-                else {
-                    old = document.getElementById("communication").innerHTML;
-                    document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
-                }
-
-                resetCase();
+            var test1 = selectedObject.material.opacity; // on check si la case est libre
+            var value1 = 1;
+            var test2 = selectedObject.material.color.b; // on check si la case peut recevoir une pièce (couleur de la case)
+            var value2 = 0.403921568627451;
+            var test3 = caseCliquee.position.x - selectedObject.position.x; // on check que l'on se déplace pas sur la largeur
+            var value3 = 0;
+            var test4 = caseCliquee.position.z- selectedObject.position.z;  // on check que l'on se déplace pas sur la longueur
+            var value4 = 0;
+            var test5 = Math.abs(caseCliquee.position.x - selectedObject.position.x); // on check que l'on se déplace bien d'une case (part1)
+            var value5 = 10;
+            var test6 = Math.abs(caseCliquee.position.z - selectedObject.position.z); // on check que l'on se déplace bien d'une case (part2)
+            var value6 = 10;
+            var test7 = intersectsPiece.length; // on check s'il y a une pièce dans la nouvelle case
+            var value7 = 0;
+            if(intersectsPiece.length) {
+                var test8 = intersectsPiece[0].object.material.color.r; // on check si la pièce de la nouvelle case a une couleur différente de celle du début
             }
             else {
-                old = document.getElementById("communication").innerHTML;
-                document.getElementById("communication").innerHTML = old + "<br/>" + "Vous ne pouvez pas aller en arri&egrave;re";
+                var test8 = 10;
             }
-        }
-        else if((test1 == value1) && (test2 == value2) && (test10 == value10) && (test11 == value11) && (test9 == value9)) {
-            console.log('On a mange une piece.');
-            if(casePostManger == selectedObject) {
+            var value8 = colorFirstPiece;
+            var test9 = cptmove; //on a déja lâché notre pièce sur une autre pour la manger (cpt + 1), là on va vérifier si une case est libre à côté
+            var value9 = 1;
+            if(casePostManger) {
+                var test10 = Math.abs(Math.abs(casePostManger.position.x) - Math.abs(casePieceMangee.position.x));
+                var value10 = 10;
+                var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
+                var value11 = 10;
+            }
+            var test12 = Math.abs(selectedObject.position.x) - Math.abs(caseCliquee.position.x); // on vérife le sens de déplacement voulu de la pièce (haut ou bas)
+            var value12 = 0;
+            var test13 = colorFirstPiece;
+            var value13 = 1;
 
-                casePieceMangee.remove(pieceMangee);
-                selectedObject.add(pieceCliquee);
-                selectedObject.material.opacity = 0.99;
-                casePieceMangee.material.opacity = 1;
-                caseDepartPieceMangee.material.opacity = 1
-                lastMoveColor = pieceCliquee.material.color.r;
-                if(lastMoveColor == 0) {
-                    cptWhite -= 1;
-                    console.log('cptWhite : ' + cptWhite);
-                    if(cptWhite == 0){
-                        document.getElementById("communication").innerHTML = "Victoire des noirs !!!";
+        /***********************************/
+        /*      Fin création des test      */
+        /***********************************/
+
+        /***********************************/
+        /*     Cas déplacement simple      */
+        /***********************************/
+
+            if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
+                if(((test12 > value12) && (test13 == value13)) || ((test12 < value12) && (test13 == value12))) {
+                    selectedObject.add(pieceCliquee);
+                    selectedObject.material.opacity = 0.99;
+                    caseCliquee.material.opacity = 1;
+                    lastMoveColor = pieceCliquee.material.color.r;
+                    if(lastMoveColor == 0) {
+                        showMessageInBox("<br/>Aux blancs de jouer");
                     }
                     else {
-                        old = document.getElementById("communication").innerHTML;
-                        document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
+                        showMessageInBox("<br/>Aux noirs de jouer");
                     }
+                    resetCase();
                 }
                 else {
-                    cptBlack -= 1;
-                    console.log('cptBlack : ' + cptBlack);
-                    if(cptBlack == 0){
-                        document.getElementById("communication").innerHTML = "Victoire des blancs !!!";
+                    showMessageInBox("<br/>Vous ne pouvez pas aller en arri&egrave;re");
+                }
+            }
+
+        /***********************************/
+        /*   Fin cas déplacement simple    */
+        /***********************************/
+
+        /***********************************/
+        /*     Cas prise d'une pièce       */
+        /***********************************/
+
+            else if((test1 == value1) && (test2 == value2) && (test10 == value10) && (test11 == value11) && (test9 == value9)) {
+                if(casePostManger == selectedObject) {
+                    casePieceMangee.remove(pieceMangee);
+                    selectedObject.add(pieceCliquee);
+                    selectedObject.material.opacity = 0.99;
+                    casePieceMangee.material.opacity = 1;
+                    caseDepartPieceMangee.material.opacity = 1
+                    lastMoveColor = pieceCliquee.material.color.r;
+                    if(lastMoveColor == 0) {
+                        cptWhite -= 1;
+                        if(cptWhite == 0){
+                            document.getElementById("communication").innerHTML = "Victoire des noirs !!!";
+                        }
+                        else {
+                            showMessageInBox("<br/>Aux blancs de jouer");
+                        }
                     }
                     else {
-                        old = document.getElementById("communication").innerHTML;
-                        document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
+                        cptBlack -= 1;
+                        if(cptBlack == 0){
+                            document.getElementById("communication").innerHTML = "Victoire des blancs !!!";
+                        }
+                        else {
+                            showMessageInBox("<br/>Aux noirs de jouer");
+                        }
                     }
-                }
-                resetCase();
-            }                
-        }
+                    resetCase();
+                }                
+            }
+
+        /***********************************/
+        /*    Fin cas prise d'une pièce    */
+        /***********************************/
+
         else if ((test1 == value1) && (test2 == value2) && (test10 != value10) && (test11 != value11) && (test9 == value9)) {
             resetCase();
         }
-        else if ((test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6) && (test7 > value7) && (test8 != value8)){
 
-            console.log('la case est prenable !');
-            pieceMangee = intersects2[0].object;
+        /***********************************/
+        /*     Part1 prise de pièce        */
+        /***********************************/
+
+        else if ((test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6) && (test7 > value7) && (test8 != value8)){
+            pieceMangee = intersectsPiece[0].object;
             casePieceMangee = intersects[0].object;
             cptmove = 1;
         }
+
+        /***********************************/
+        /*   Fin part1 prise de pièce      */
+        /***********************************/
+
         else {
-            old = document.getElementById("communication").innerHTML;
-            document.getElementById("communication").innerHTML = old + "<br/>" + "Mauvaise manipulation de votre part, veuillez rejouer";
+            showMessageInBox('<br/>Mauvaise manipulation de votre part, veuillez rejouer');
             resetCase();
         }
 
@@ -318,5 +338,9 @@ function resetCase(){
     caseDepartPieceMangee = null;
     casePostManger = null;
     cptmove = 0;
-    console.log("reset");
+}
+
+function showMessageInBox(message){
+    old = document.getElementById("communication").innerHTML;
+    document.getElementById("communication").innerHTML = old + message;
 }
