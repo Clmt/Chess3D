@@ -19,8 +19,9 @@ var casePieceMangee;
 var caseDepartPieceMangee;
 var casePostManger;
 var lastMoveColor = 0;
-var depart = [];
-var arrivee = [];
+var old = [];
+var cptWhite = 20;
+var cptBlack = 20;
 
 // -----------------
 // ORIGIN
@@ -31,15 +32,10 @@ function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(200, 131, 0);
 
-
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0xdddddd, 1.0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
-
-    // cameraControl = new THREE.OrbitControls(camera);
-
-    document.body.appendChild(renderer.domElement);
     
     // Lumière
     addLight();
@@ -48,11 +44,7 @@ function init() {
     makeChessBoard();
 
     document.body.appendChild(renderer.domElement);
-    
     camera.lookAt(scene.position);
-
-
-
     render();
 
     
@@ -62,18 +54,12 @@ function init() {
 // Called when the scene needs to be rendered. Delegates to requestAnimationFrame
 // for future renders
 function render() {
-    //cameraControl.update();
     // Controleur d'une piece.
     if (pieceControl != null) {
         pieceControl.update();    
     }
     requestAnimationFrame(render);
     renderer.render(scene, camera);
-    /*
-    console.log("Position de la caméra");
-    console.log(camera.position.x);
-    console.log(camera.position.y);
-    console.log(camera.position.z);*/
 }
 
 
@@ -84,7 +70,6 @@ function handleResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
 
 window.onmousedown=onDocumentMouseDown;
 window.onmouseup=onDocumentMouseUp;
@@ -99,6 +84,7 @@ window.addEventListener('resize', handleResize, false);
 // -----------------
 // Methods
 // -----------------
+
 function addLight(){
     var ambientLight = new THREE.AmbientLight(0xffffff);
     ambientLight.position.set(10, 20, 20);
@@ -109,7 +95,6 @@ function addLight(){
 
 function makeChessBoard() {
     var compteur = 1;
-    var middleCase;
     for(var i=0; i < 10; i++){
         for (var j = 0; j < 10; j++) {
 
@@ -119,8 +104,6 @@ function makeChessBoard() {
             var piece;
             
             if (i % 2 == 0  && j % 2 == 0 || i % 2 == 1 && j % 2 == 1) {
-
-                //console.log(compteur);
 
                 chessCaseColor = '#827467'; // marron foncé
 
@@ -143,8 +126,6 @@ function makeChessBoard() {
             else {
                 chessCase = new ChessCase(j ,i , chessCaseColor, 1);
             }
-
-            
             
             chessCase.chessCaseMesh.castShadow = true;
             this.scene.add(chessCase.chessCaseMesh);
@@ -173,11 +154,10 @@ function onDocumentMouseDown(event) {
         pieceCliquee = selectedObject;
         colorfirstcase = selectedObject.material.color.r;
         if(lastMoveColor == colorfirstcase) {
-            //alert('It\'s not your turn');
-            // document.getElementById("communication").innerHTML = "Paragraph changed!";
+            old = document.getElementById("communication").innerHTML;
+            document.getElementById("communication").innerHTML = old + "<br/>" + "Ce n'est pas a votre tour de jouer !";
             return;
         }
-
     }
     
     if(cptmove == 0) {
@@ -192,9 +172,7 @@ function onDocumentMouseDown(event) {
     selectedObject = intersectsCases[0].object;
     console.log('Case cliquee : ');
     console.log(selectedObject.material.opacity);
-
 }
-
 
 function onDocumentMouseUp(event) {
      if(lastMoveColor == colorfirstcase) {
@@ -208,8 +186,8 @@ function onDocumentMouseUp(event) {
     
     var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
     projector.unprojectVector(vector, camera);
-
     var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
     var intersects = raycaster.intersectObjects(collidableCaseList);
 
     if (intersects.length > 0) {
@@ -244,9 +222,6 @@ function onDocumentMouseUp(event) {
             var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
             var value11 = 10;
         }
-       /* if(casePostManger.length > 0) {
-           
-        }*/
 
         if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
             console.log('Deplacement simple');
@@ -254,17 +229,14 @@ function onDocumentMouseUp(event) {
             selectedObject.material.opacity = 0.99;
             caseCliquee.material.opacity = 1;
             lastMoveColor = pieceCliquee.material.color.r;
-
-            /* new */
-
-            depart['x'] = caseCliquee.position.x;
-            depart['z'] = caseCliquee.position.z;
-            arrivee['x'] = selectedObject.position.x;
-            arrivee['z'] = selectedObject.position.z;
-            console.log('depart x : ' + depart['x'] + 'depart z : ' + depart['z'] + 'arrivee x : ' + arrivee['x'] + 'arrivee z : ' + arrivee['z']);
-            caseCliquee.addPiece('black');
-
-            /* End new */
+            if(lastMoveColor == 0) {
+                old = document.getElementById("communication").innerHTML;
+                document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
+            }
+            else {
+                old = document.getElementById("communication").innerHTML;
+                document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
+            }
 
             resetCase();
         }
@@ -277,6 +249,29 @@ function onDocumentMouseUp(event) {
                 selectedObject.material.opacity = 0.99;
                 casePieceMangee.material.opacity = 1;
                 caseDepartPieceMangee.material.opacity = 1
+                lastMoveColor = pieceCliquee.material.color.r;
+                if(lastMoveColor == 0) {
+                    cptWhite -= 1;
+                    console.log('cptWhite : ' + cptWhite);
+                    if(cptWhite == 0){
+                        document.getElementById("communication").innerHTML = "Victoire des noirs !!!";
+                    }
+                    else {
+                        old = document.getElementById("communication").innerHTML;
+                        document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
+                    }
+                }
+                else {
+                    cptBlack -= 1;
+                    console.log('cptBlack : ' + cptBlack);
+                    if(cptBlack == 0){
+                        document.getElementById("communication").innerHTML = "Victoire des blancs !!!";
+                    }
+                    else {
+                        old = document.getElementById("communication").innerHTML;
+                        document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
+                    }
+                }
                 resetCase();
             }                
         }
@@ -291,6 +286,8 @@ function onDocumentMouseUp(event) {
             cptmove = 1;
         }
         else {
+            old = document.getElementById("communication").innerHTML;
+            document.getElementById("communication").innerHTML = old + "<br/>" + "Mauvaise manipulation de votre part, veuillez rejouer";
             resetCase();
         }
 
