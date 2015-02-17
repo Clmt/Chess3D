@@ -155,7 +155,7 @@ function onDocumentMouseDown(event) {
         colorfirstcase = selectedObject.material.color.r;
         if(lastMoveColor == colorfirstcase) {
             old = document.getElementById("communication").innerHTML;
-            document.getElementById("communication").innerHTML = old + "<br/>" + "Ce n'est pas a votre tour de jouer !";
+            document.getElementById("communication").innerHTML = old + "<br/>" + "Ce n'est pas &agrave; votre tour de jouer !";
             return;
         }
     }
@@ -222,23 +222,38 @@ function onDocumentMouseUp(event) {
             var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
             var value11 = 10;
         }
+        var test12 = Math.abs(selectedObject.position.x) - Math.abs(caseCliquee.position.x);
+        var value12 = 0;
+        var test13 = colorfirstcase;
+        var value13 = 1;
 
         if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
-            console.log('Deplacement simple');
-            selectedObject.add(pieceCliquee);
-            selectedObject.material.opacity = 0.99;
-            caseCliquee.material.opacity = 1;
-            lastMoveColor = pieceCliquee.material.color.r;
-            if(lastMoveColor == 0) {
-                old = document.getElementById("communication").innerHTML;
-                document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
+            console.log('test 12 : ' + test12);
+            console.log('couleur first case : ' + colorfirstcase);
+            if(((test12 > value12) && (test13 == value13)) || ((test12 < value12) && (test13 == value12))) {
+
+                console.log('Deplacement simple');
+                console.log(selectedObject.position.x);
+                console.log(caseCliquee.position.x);
+                selectedObject.add(pieceCliquee);
+                selectedObject.material.opacity = 0.99;
+                caseCliquee.material.opacity = 1;
+                lastMoveColor = pieceCliquee.material.color.r;
+                if(lastMoveColor == 0) {
+                    old = document.getElementById("communication").innerHTML;
+                    document.getElementById("communication").innerHTML = old + "<br/>" + "Aux blancs de jouer";
+                }
+                else {
+                    old = document.getElementById("communication").innerHTML;
+                    document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
+                }
+
+                resetCase();
             }
             else {
                 old = document.getElementById("communication").innerHTML;
-                document.getElementById("communication").innerHTML = old + "<br/>" + "Aux noirs de jouer";
+                document.getElementById("communication").innerHTML = old + "<br/>" + "Vous ne pouvez pas aller en arri&egrave;re";
             }
-
-            resetCase();
         }
         else if((test1 == value1) && (test2 == value2) && (test10 == value10) && (test11 == value11) && (test9 == value9)) {
             console.log('On a mange une piece.');
