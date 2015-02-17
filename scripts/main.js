@@ -12,7 +12,7 @@ var collidableCaseList = [];
 var oldColors = [1];
 var caseCliquee;
 var pieceCliquee;
-var colorfirstcase;
+var colorFirstPiece;
 var cptmove = 0;
 var pieceMangee;
 var casePieceMangee;
@@ -152,8 +152,8 @@ function onDocumentMouseDown(event) {
     if (intersects.length > 0) {
         selectedObject = intersects[0].object;
         pieceCliquee = selectedObject;
-        colorfirstcase = selectedObject.material.color.r;
-        if(lastMoveColor == colorfirstcase) {
+        colorFirstPiece = selectedObject.material.color.r;
+        if(lastMoveColor == colorFirstPiece) {
             old = document.getElementById("communication").innerHTML;
             document.getElementById("communication").innerHTML = old + "<br/>" + "Ce n'est pas &agrave; votre tour de jouer !";
             return;
@@ -175,7 +175,7 @@ function onDocumentMouseDown(event) {
 }
 
 function onDocumentMouseUp(event) {
-     if(lastMoveColor == colorfirstcase) {
+     if(lastMoveColor == colorFirstPiece) {
         return;
     }
     var vector2 = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
@@ -213,7 +213,7 @@ function onDocumentMouseUp(event) {
         else {
             var test8 = 10;
         }
-        var value8 = colorfirstcase;
+        var value8 = colorFirstPiece;
         var test9 = cptmove; //on a déja lâché notre pièce sur une autre pour la manger (cpt + 1), là on va vérifier si une case est libre à côté
         var value9 = 1;
         if(casePostManger) {
@@ -222,14 +222,14 @@ function onDocumentMouseUp(event) {
             var test11 = Math.abs(Math.abs(casePostManger.position.z) - Math.abs(casePieceMangee.position.z));
             var value11 = 10;
         }
-        var test12 = Math.abs(selectedObject.position.x) - Math.abs(caseCliquee.position.x);
+        var test12 = Math.abs(selectedObject.position.x) - Math.abs(caseCliquee.position.x); // on vérife le sens de déplacement voulu de la pièce (haut ou bas)
         var value12 = 0;
-        var test13 = colorfirstcase;
+        var test13 = colorFirstPiece;
         var value13 = 1;
 
         if((test1 == value1) && (test2 == value2) && (test3 != value3) && (test4 != value4) && (test5 == value5) && (test6 == value6)) {
             console.log('test 12 : ' + test12);
-            console.log('couleur first case : ' + colorfirstcase);
+            console.log('couleur first case : ' + colorFirstPiece);
             if(((test12 > value12) && (test13 == value13)) || ((test12 < value12) && (test13 == value12))) {
 
                 console.log('Deplacement simple');
@@ -312,7 +312,7 @@ function onDocumentMouseUp(event) {
 function resetCase(){
     caseCliquee = null;
     pieceCliquee = null;
-    colorfirstcase = null;
+    colorFirstPiece = null;
     pieceMangee = null;
     casePieceMangee = null;
     caseDepartPieceMangee = null;
